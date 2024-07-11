@@ -1,40 +1,56 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Repository for verifying email sending by `verifyBeforeUpdateEmail` for firebase authentication.
 
-## Getting Started
+## Setup
 
-First, run the development server:
+### 1. Install packages
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
 
+### 2. Configure environment variables
+1. Copy `.env.example` to create `.env.local`
+2. Replace the environment variables in `.env.local` with configuration from the Firebase app used for verification
+
+```
+# .env.local
+NEXT_PUBLIC_FIREBASE_API_KEY=**********
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=**********
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=**********
+NEXT_PUBLIC_FIREBASE_APP_ID=**********
+```
+
+### 3. Start the development server
 ```bash
 npm run dev
 # or
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
+Open [http://localhost:3000](http://localhost:3000) with your browser
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 4. Change the action URL
+From the Firebase Authentication console, change the action URL in the email address change template to `http://localhost:3000/user_account/auth_action`
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Steps to Reproduce
+### 1. Create User
+On the top page, enter an email address A and a password, then click "Create User"
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### 2. Change email from A to B
+1. On the top page, enter email address A and the password, then click "Login"
+2. Enter an email address B and click "Change Email"
+3. A verification email will be sent to B. Click the verification link
+4. A confirmation email about the email address change will be sent to A
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### 3. Change email from B to C
+1. On the top page, enter email address B and the password, then click "Login"
+2. Enter an email address C and click "Change Email"
+3. A verification email will be sent to C. Click the verification link
+4. A confirmation email about the email address change will be sent to A again
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Expected Behavior
+In step 4 of "3. Change email from B to C", the confirmation email should be sent to B
